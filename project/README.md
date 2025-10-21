@@ -1,4 +1,3 @@
-# Projeto-Integrador-VIII-B
 # Recicla Capixaba - Jogos Educativos
 
 Plataforma de jogos educativos sobre reciclagem e sustentabilidade, baseada no programa Recicla Capixaba.
