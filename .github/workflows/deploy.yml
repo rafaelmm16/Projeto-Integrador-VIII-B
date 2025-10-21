@@ -1,0 +1,67 @@
+# Workflow para build e deploy de um site Next.js no GitHub Pages
+name: Deploy Next.js to GitHub Pages
+
+on:
+  # Executa no push para a branch 'main' (ou 'master')
+  push:
+    branches: ["main"] # Altere para 'master' se for o caso
+  # Permite executar este workflow manualmente pela aba Actions
+  workflow_dispatch:
+
+# Define permissões para o GITHUB_TOKEN
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite apenas um deploy concorrente
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18" # Seu package.json indica Next.js 15, que requer Node 18+
+          cache: "npm"
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Static Site
+        # Passa as chaves do Supabase como variáveis de ambiente para o build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      # Corrige um problema comum do Next.js no GitHub Pages (que usa Jekyll por padrão)
+      - name: Create .nojekyll file
+        run: touch ./out/.nojekyll
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Pasta de saída gerada pelo 'next build' com 'output: export'
+          path: "./out"
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
