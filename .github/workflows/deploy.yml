@@ -2,19 +2,15 @@
 name: Deploy Next.js to GitHub Pages
 
 on:
-  # Executa no push para a branch 'main' (ou 'master')
   push:
     branches: ["main"] # Altere para 'master' se for o caso
-  # Permite executar este workflow manualmente pela aba Actions
   workflow_dispatch:
 
-# Define permissões para o GITHUB_TOKEN
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Permite apenas um deploy concorrente
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -29,31 +25,37 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18" # Seu package.json indica Next.js 15, que requer Node 18+
+          node-version: "18"
           cache: "npm"
+          # CORREÇÃO: Aponta para o local correto do seu package-lock.json
+          cache-dependency-path: project/package-lock.json
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
       - name: Install Dependencies
+        # CORREÇÃO: Executa o npm install dentro da pasta /project
+        working-directory: ./project
         run: npm install
 
       - name: Build Static Site
-        # Passa as chaves do Supabase como variáveis de ambiente para o build
+        # CORREÇÃO: Executa o build dentro da pasta /project
+        working-directory: ./project
         run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      # Corrige um problema comum do Next.js no GitHub Pages (que usa Jekyll por padrão)
       - name: Create .nojekyll file
+        # CORREÇÃO: Cria o arquivo na pasta de saída correta
+        working-directory: ./project
         run: touch ./out/.nojekyll
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Pasta de saída gerada pelo 'next build' com 'output: export'
-          path: "./out"
+          # CORREÇÃO: Aponta para a pasta de saída (out) dentro de /project
+          path: "./project/out"
 
   deploy:
     environment:
