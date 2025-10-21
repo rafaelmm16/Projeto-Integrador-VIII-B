@@ -185,22 +185,22 @@ export default function RecyclingQuiz() {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="bg-white rounded-xl shadow-lg p-8">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4 sm:gap-0">
+          <div className="flex items-center gap-4 sm:gap-6">
             <div className="flex items-center gap-2">
               <Trophy className="text-yellow-600" size={20} />
-              <span className="font-semibold">Pontos: {score}</span>
+              <span className="font-semibold text-sm sm:text-base">Pontos: {score}</span>
             </div>
             {!gameOver && (
-              <span className="font-semibold">
+              <span className="font-semibold text-sm sm:text-base">
                 Pergunta {currentQuestion + 1} de {questions.length}
               </span>
             )}
           </div>
           <button
             onClick={resetGame}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <RotateCcw size={18} />
             Reiniciar
@@ -209,8 +209,8 @@ export default function RecyclingQuiz() {
 
         {!gameOver ? (
           <div>
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">{question.question}</h3>
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 sm:p-6 mb-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">{question.question}</h3>
             </div>
 
             <div className="space-y-3 mb-6">
@@ -236,7 +236,7 @@ export default function RecyclingQuiz() {
                     disabled={selectedAnswer !== null}
                     className={`w-full p-4 rounded-lg text-left font-medium transition-all ${buttonClass} ${
                       selectedAnswer === null ? 'cursor-pointer' : 'cursor-default'
-                    } flex items-center justify-between`}
+                    } flex items-center justify-between text-sm sm:text-base`}
                   >
                     <span>{option}</span>
                     {showResult && isCorrect && <CheckCircle className="text-green-600" size={24} />}
@@ -248,7 +248,7 @@ export default function RecyclingQuiz() {
 
             {showExplanation && (
               <div className="mb-6">
-                <div className={`p-4 rounded-lg ${
+                <div className={`p-4 rounded-lg text-sm sm:text-base ${
                   selectedAnswer === question.correctAnswer
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
@@ -270,21 +270,21 @@ export default function RecyclingQuiz() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <div className="text-6xl mb-4">
+            <div className="text-5xl sm:text-6xl mb-4">
               {score >= 80 ? '🏆' : score >= 60 ? '🎉' : score >= 40 ? '👍' : '📚'}
             </div>
-            <h3 className="text-3xl font-bold mb-2">Quiz Concluído!</h3>
-            <p className="text-2xl text-gray-600 mb-6">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-2">Quiz Concluído!</h3>
+            <p className="text-xl sm:text-2xl text-gray-600 mb-6">
               Pontuação: {score} de {questions.length * 10} pontos
             </p>
-            <p className="text-lg text-gray-600 mb-4">
+            <p className="text-base sm:text-lg text-gray-600 mb-4">
               Você acertou {answers.filter(a => a).length} de {questions.length} perguntas
             </p>
 
             {showNameInput && (
               <div className="max-w-md mx-auto mb-6">
                 <p className="mb-3 font-semibold">Salvar sua pontuação:</p>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="text"
                     value={playerName}
@@ -306,8 +306,8 @@ export default function RecyclingQuiz() {
       </div>
 
       {leaderboard.length > 0 && (
-        <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mt-6">
+          <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
             <Trophy className="text-yellow-600" />
             Melhores Pontuações
           </h3>
@@ -315,10 +315,10 @@ export default function RecyclingQuiz() {
             {leaderboard.map((entry, idx) => (
               <div key={entry.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-lg text-gray-600">#{idx + 1}</span>
-                  <span className="font-semibold">{entry.players?.name || 'Anônimo'}</span>
+                  <span className="font-bold text-base sm:text-lg text-gray-600">#{idx + 1}</span>
+                  <span className="font-semibold text-sm sm:text-base">{entry.players?.name || 'Anônimo'}</span>
                 </div>
-                <span className="font-bold text-blue-600">{entry.score} pts</span>
+                <span className="font-bold text-blue-600 text-sm sm:text-base">{entry.score} pts</span>
               </div>
             ))}
           </div>

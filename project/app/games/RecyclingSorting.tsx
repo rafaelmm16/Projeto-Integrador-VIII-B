@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { RotateCcw, Trophy, Timer } from 'lucide-react'
 import { saveGameScore, getLeaderboard } from '../lib/supabase'
 
+// ... (interfaces e constantes items/bins permanecem as mesmas) ...
 interface Item {
   id: number;
   name: string;
@@ -29,6 +30,7 @@ const bins = [
   { type: 'tire', name: 'Pneus', color: 'bg-gray-700', emoji: '⚫' },
   { type: 'isopor', name: 'Isopor', color: 'bg-blue-500', emoji: '🔵' },
 ];
+
 
 export default function RecyclingSorting() {
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
@@ -135,9 +137,9 @@ export default function RecyclingSorting() {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex gap-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4 sm:gap-0">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
             <div className="flex items-center gap-2">
               <Trophy className="text-yellow-600" size={20} />
               <span className="font-semibold">Pontos: {score}</span>
@@ -155,7 +157,7 @@ export default function RecyclingSorting() {
           </div>
           <button
             onClick={resetGame}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto"
           >
             <RotateCcw size={18} />
             Reiniciar
@@ -164,13 +166,13 @@ export default function RecyclingSorting() {
 
         {!isPlaying && !gameOver && (
           <div className="text-center py-8">
-            <h3 className="text-2xl font-bold mb-4">Separe os Resíduos Corretamente</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4">Separe os Resíduos Corretamente</h3>
+            <p className="text-gray-600 mb-6 text-sm sm:text-base">
               Arraste cada item para a lixeira correta. Você tem 3 vidas!
             </p>
             <button
               onClick={() => setIsPlaying(true)}
-              className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg"
+              className="px-6 py-3 sm:px-8 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-base sm:text-lg"
             >
               Começar Jogo
             </button>
@@ -179,26 +181,26 @@ export default function RecyclingSorting() {
 
         {isPlaying && currentItem && !gameOver && (
           <div className="text-center">
-            <div className="text-8xl mb-4">{currentItem.emoji}</div>
-            <h3 className="text-2xl font-bold mb-6">{currentItem.name}</h3>
+            <div className="text-7xl sm:text-8xl mb-4">{currentItem.emoji}</div>
+            <h3 className="text-xl sm:text-2xl font-bold mb-6">{currentItem.name}</h3>
 
             {message && (
-              <div className={`p-3 rounded-lg mb-4 ${
+              <div className={`p-3 rounded-lg mb-4 text-sm sm:text-base ${
                 message.includes('Correto') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
               }`}>
                 {message}
               </div>
             )}
 
-            <div className="grid grid-cols-5 gap-4 mt-8">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 mt-8">
               {bins.map(bin => (
                 <button
                   key={bin.type}
                   onClick={() => handleSort(bin.type)}
-                  className={`${bin.color} text-white rounded-lg p-6 hover:opacity-80 transition-opacity flex flex-col items-center gap-2`}
+                  className={`${bin.color} text-white rounded-lg p-3 sm:p-6 hover:opacity-80 transition-opacity flex flex-col items-center justify-center gap-1 sm:gap-2 aspect-square`}
                 >
-                  <div className="text-4xl">{bin.emoji}</div>
-                  <span className="font-semibold text-sm">{bin.name}</span>
+                  <div className="text-3xl sm:text-4xl">{bin.emoji}</div>
+                  <span className="font-semibold text-xs sm:text-sm text-center">{bin.name}</span>
                 </button>
               ))}
             </div>
@@ -207,20 +209,20 @@ export default function RecyclingSorting() {
 
         {gameOver && (
           <div className="text-center py-8">
-            <div className={`text-6xl mb-4`}>{itemsProcessed >= 15 ? '🎉' : '😢'}</div>
-            <h3 className="text-2xl font-bold mb-2">{message}</h3>
-            <p className="text-lg text-gray-600 mb-4">
+            <div className={`text-5xl sm:text-6xl mb-4`}>{itemsProcessed >= 15 ? '🎉' : '😢'}</div>
+            <h3 className="text-xl sm:text-2xl font-bold mb-2">{message}</h3>
+            <p className="text-base sm:text-lg text-gray-600 mb-4">
               Pontuação Final: {score} pontos em {formatTime(timeElapsed)}
             </p>
 
             {showNameInput && (
               <div className="max-w-md mx-auto mb-6">
                 <p className="mb-3 font-semibold">Salvar sua pontuação:</p>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="text"
                     value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value)}
+                    onChange={(e) => setPlayerName(e.targe.value)}
                     placeholder="Digite seu nome"
                     className="flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
                   />
@@ -238,8 +240,8 @@ export default function RecyclingSorting() {
       </div>
 
       {leaderboard.length > 0 && (
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+          <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
             <Trophy className="text-yellow-600" />
             Melhores Pontuações
           </h3>
@@ -247,10 +249,10 @@ export default function RecyclingSorting() {
             {leaderboard.map((entry, idx) => (
               <div key={entry.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-lg text-gray-600">#{idx + 1}</span>
-                  <span className="font-semibold">{entry.players?.name || 'Anônimo'}</span>
+                  <span className="font-bold text-base sm:text-lg text-gray-600">#{idx + 1}</span>
+                  <span className="font-semibold text-sm sm:text-base">{entry.players?.name || 'Anônimo'}</span>
                 </div>
-                <span className="font-bold text-blue-600">{entry.score} pts</span>
+                <span className="font-bold text-blue-600 text-sm sm:text-base">{entry.score} pts</span>
               </div>
             ))}
           </div>
